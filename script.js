@@ -20,49 +20,33 @@ function bookmarkPage() {
 
 // Enhanced share functionality
 function sharePage() {
-    const shareMenu = document.createElement('div');
-    shareMenu.className = 'share-menu';
-    shareMenu.innerHTML = `
-        <div class="share-options">
-            <button onclick="shareToTwitter()" class="share-btn">[ TWITTER ]</button>
-            <button onclick="shareToFacebook()" class="share-btn">[ FACEBOOK ]</button>
-            <button onclick="shareToReddit()" class="share-btn">[ REDDIT ]</button>
-            <button onclick="copyLink()" class="share-btn">[ COPY LINK ]</button>
-            <button onclick="document.querySelector('.share-menu').remove()" class="share-btn">[ CLOSE ]</button>
-        </div>
-    `;
-    document.body.appendChild(shareMenu);
-
-    // Add click event listener to close when clicking outside
-    shareMenu.addEventListener('click', function(e) {
-        if (e.target === this) {
-            shareMenu.remove();
-        }
-    });
-}
-
-function shareToTwitter() {
-    const text = encodeURIComponent('🎮 Vibing to some awesome chiptunes at 8bit-waveFM! Check it out:');
-    const url = encodeURIComponent(window.location.href);
-    window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
-}
-
-function shareToFacebook() {
-    const url = encodeURIComponent(window.location.href);
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
-}
-
-function shareToReddit() {
-    const url = encodeURIComponent(window.location.href);
-    const title = encodeURIComponent('8bit-waveFM - 24/7 Chiptune Radio');
-    window.open(`https://reddit.com/submit?url=${url}&title=${title}`, '_blank');
-}
-
-function copyLink() {
-    navigator.clipboard.writeText(window.location.href)
+    if (navigator.share) {
+        navigator.share({
+            title: '8-Bit Waves FM',
+            text: 'Check out this awesome chiptune radio station!',
+            url: window.location.href
+        })
         .then(() => {
-            alert('Link copied to clipboard! Share with your friends! ��');
+            gtag('event', 'share', {
+                'event_category': 'Engagement',
+                'event_label': 'Share Station'
+            });
+        })
+        .catch(console.error);
+    } else {
+        // Fallback
+        const dummy = document.createElement('input');
+        document.body.appendChild(dummy);
+        dummy.value = window.location.href;
+        dummy.select();
+        document.execCommand('copy');
+        document.body.removeChild(dummy);
+        alert('URL copied to clipboard!');
+        gtag('event', 'copy_url', {
+            'event_category': 'Engagement',
+            'event_label': 'Copy Station URL'
         });
+    }
 }
 
 // Audio stream setup
@@ -145,9 +129,17 @@ playPauseBtn.addEventListener('click', () => {
     if (audioPlayer.paused) {
         audioPlayer.play();
         playPauseBtn.querySelector('i').className = 'fas fa-pause';
+        gtag('event', 'play_radio', {
+            'event_category': 'Engagement',
+            'event_label': 'Radio Play'
+        });
     } else {
         audioPlayer.pause();
         playPauseBtn.querySelector('i').className = 'fas fa-play';
+        gtag('event', 'pause_radio', {
+            'event_category': 'Engagement',
+            'event_label': 'Radio Pause'
+        });
     }
 });
 
@@ -174,10 +166,22 @@ volumeSlider.addEventListener('input', (e) => {
                                            'fas fa-volume-up';
 });
 
-// Initialize colors
-document.documentElement.style.setProperty('--primary-color', primaryColorInput.value);
-document.documentElement.style.setProperty('--secondary-color', secondaryColorInput.value);
-document.documentElement.style.setProperty('--accent-color', accentColorInput.value);
+// Track volume changes
+volumeSlider.addEventListener('change', function() {
+    gtag('event', 'volume_change', {
+        'event_category': 'Engagement',
+        'event_label': 'Volume Adjustment',
+        'value': Math.round(this.value * 100)
+    });
+});
+
+// Track PayPal button clicks
+document.querySelector('.pp-TPEXQKHJHHDQU').addEventListener('click', function() {
+    gtag('event', 'begin_checkout', {
+        'event_category': 'Donations',
+        'event_label': 'PayPal Donation Click'
+    });
+});
 
 // Crypto support functions
 function showCryptoAddresses() {
@@ -206,6 +210,10 @@ function showCryptoAddresses() {
             <p class="crypto-note">Click address to copy • Powered by Coinbase</p>
         `;
         document.body.appendChild(modal);
+        gtag('event', 'view_crypto', {
+            'event_category': 'Donations',
+            'event_label': 'View Crypto Addresses'
+        });
     }
     modal.style.display = 'block';
 }
