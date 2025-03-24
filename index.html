@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="24/7 Chiptune Radio - Listen to the best 8-bit music and retro game tunes. Live streaming chiptunes, video game music, and retro synthesizer tracks.">
+    <meta name="keywords" content="chiptune, 8bit music, retro game music, video game radio, chiptune radio, 8-bit waves, retro gaming music">
+    
+    <!-- Social Media Tags -->
+    <meta property="og:title" content="8bit Waves FM - 24/7 Chiptune Radio">
+    <meta property="og:description" content="Listen to the best 8-bit music and retro game tunes streaming 24/7. Your retro gaming music station!">
+    <meta property="og:type" content="music.radio_station">
+    <meta property="og:url" content="https://8bitwaves.org">
+    
+    <title>8-Bit Waves FM - 24/7 Chiptune Radio</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <div class="scanline"></div>
+    <div class="crt-overlay"></div>
+    <div class="top-bar">
+        <button onclick="bookmarkPage()" class="retro-button">[ BOOKMARK ]</button>
+        <div class="color-controls">
+            <input type="color" id="primaryColor" value="#0088ff" title="Primary Color">
+            <input type="color" id="secondaryColor" value="#eeff00" title="Secondary Color">
+            <input type="color" id="accentColor" value="#00ff00" title="Button Color">
+        </div>
+        <div id="clock" class="digital-clock"></div>
+        <button onclick="sharePage()" class="retro-button">[ SHARE ]</button>
+    </div>
+    <header>
+        <h1>8-Bit Waves FM</h1>
+        <p class="tagline">24/7 Chiptune Radio</p>
+    </header>
+    <main>
+        <div class="player-container">
+            <div class="retro-border">
+                <div class="equalizer">
+                    <div class="eq-bar"></div>
+                    <div class="eq-bar"></div>
+                    <div class="eq-bar"></div>
+                    <div class="eq-bar"></div>
+                    <div class="eq-bar"></div>
+                    <div class="eq-bar"></div>
+                    <div class="eq-bar"></div>
+                    <div class="eq-bar"></div>
+                    <div class="eq-bar"></div>
+                    <div class="eq-bar"></div>
+                </div>
+                <audio id="audioPlayer">
+                    <source src="https://uk17freenew.listen2myradio.com/live.mp3?typeportmount=s1_28059_stream_159897494" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+                <div class="status">
+                    <div class="listeners">Listeners: <span id="listener-count">~</span></div>
+                    <div class="now-playing">Now Playing: <span id="current-track">Live Stream</span><span class="blink">_</span></div>
+                </div>
+            </div>
+            <div class="player-controls">
+                <button id="playPauseBtn" class="control-btn">
+                    <i class="fas fa-play"></i>
+                </button>
+                <button id="volumeBtn" class="control-btn">
+                    <i class="fas fa-volume-up"></i>
+                </button>
+                <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="1">
+                <button onclick="sharePage()" class="control-btn">
+                    <i class="fas fa-share-alt"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="main-content-wrapper">
+            <div class="donate-section">
+                <div class="retro-border">
+                    <h2>Support the Station</h2>
+                    <p class="support-text">Help keep the 8-bit waves flowing!</p>
+                    <style>.pp-TPEXQKHJHHDQU{text-align:center;border:none;border-radius:0.25rem;min-width:11.625rem;padding:0 2rem;height:2.625rem;font-weight:bold;background-color:#FFD140;color:#000000;font-family:"Helvetica Neue",Arial,sans-serif;font-size:1rem;line-height:1.25rem;cursor:pointer;}</style>
+                    <form action="https://www.paypal.com/ncp/payment/TPEXQKHJHHDQU" method="post" target="_blank" style="display:inline-grid;justify-items:center;align-content:start;gap:0.5rem;">
+                        <input class="pp-TPEXQKHJHHDQU" type="submit" value="Support this station" />
+                        <img src=https://www.paypalobjects.com/images/Debit_Credit_APM.svg alt="cards" />
+                        <section> Powered by <img src="https://www.paypalobjects.com/paypal-ui/logos/svg/paypal-wordmark-color.svg" alt="paypal" style="height:0.875rem;vertical-align:middle;"/></section>
+                    </form>
+
+                    <div class="support-tier" style="margin-top: 20px;">
+                        <h3>[ CRYPTO ]</h3>
+                        <button onclick="showCryptoAddresses()" class="support-btn">[ SHOW ADDRESSES ]</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <div class="pixel-art">
+                    <pre>
+    ╔════╗
+    ║    ║
+    ║ ▀▄ ║
+    ║ ▄▀ ║
+    ║    ║
+    ╚════╝
+   ┌──┴┴──┐
+   │ ▐▌▐▌ │
+   └──────┘
+                    </pre>
+                </div>
+                <p class="station-info">[BROADCASTING CHIPTUNES 24/7 FROM THE DIGITAL FRONTIER!]</p>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2024 8-Bit Waves FM - Streaming 24/7 Chiptunes</p>
+        <p class="credits">[ MADE WITH <span class="heart">♥</span> AND 8-BIT MAGIC ]</p>
+    </footer>
+
+    <!-- SEO and Station Info -->
+    <div class="station-info">
+        <h2>8-bit Wave FM - Your Retro Chiptune Radio</h2>
+        <p>Stream the best chiptune and retro game music 24/7. Experience nostalgia with our curated selection of 8-bit tunes.</p>
+        <div class="tags">
+            chiptune radio, 8-bit music, retro game music, video game radio, chiptune streaming
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
