@@ -49,32 +49,60 @@ function sharePage() {
     }
 }
 
-// Audio stream setup
-function setupAudioStream() {
-    audioPlayer.src = STREAM_URL;
-    
-    audioPlayer.addEventListener('error', (e) => {
-        console.error('Stream error:', e);
-        currentTrack.textContent = 'Stream Error - Please try again';
-    });
-    
-    audioPlayer.addEventListener('playing', () => {
-        console.log('Stream connected and playing');
-        currentTrack.textContent = 'Live Stream';
-        playPauseBtn.querySelector('i').className = 'fas fa-pause';
-    });
+// Playlist configuration
+const playlist = [
+    {
+        title: "8-Bit Waves FM Theme",
+        artist: "8-Bit Waves FM",
+        file: "music/theme.mp3"
+    },
+    // Add more songs here
+];
 
-    audioPlayer.addEventListener('waiting', () => {
-        currentTrack.textContent = 'Buffering...';
-    });
+let currentTrackIndex = 0;
 
-    // Try to autoplay
-    audioPlayer.load();
-    audioPlayer.play().catch(err => {
-        console.log('Click play to start', err);
-        playPauseBtn.querySelector('i').className = 'fas fa-play';
+// Initialize audio player with first track
+audioPlayer.src = playlist[0].file;
+audioPlayer.volume = 0.5;
+
+// Update track info display
+function updateTrackInfo() {
+    const currentTrack = playlist[currentTrackIndex];
+    trackInfo.innerHTML = `
+        <div class="track-title">${currentTrack.title}</div>
+        <div class="track-artist">${currentTrack.artist}</div>
+    `;
+}
+
+// Play next track
+function playNextTrack() {
+    currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+    audioPlayer.src = playlist[currentTrackIndex].file;
+    audioPlayer.play();
+    updateTrackInfo();
+    gtag('event', 'track_change', {
+        'event_category': 'Playback',
+        'event_label': playlist[currentTrackIndex].title
     });
 }
+
+// Play previous track
+function playPreviousTrack() {
+    currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
+    audioPlayer.src = playlist[currentTrackIndex].file;
+    audioPlayer.play();
+    updateTrackInfo();
+    gtag('event', 'track_change', {
+        'event_category': 'Playback',
+        'event_label': playlist[currentTrackIndex].title
+    });
+}
+
+// Initialize player
+updateTrackInfo();
+
+// Add event listeners
+audioPlayer.addEventListener('ended', playNextTrack);
 
 // Initialize
 function init() {
