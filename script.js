@@ -1,65 +1,91 @@
 // Constants
-const STREAM_URL = 'https://uk17freenew.listen2myradio.com/live.mp3?typeportmount=s1_28059_stream_159897494';
 const UPDATE_INTERVAL = 5000; // 5 seconds
 
 // DOM Elements
-const listenerCount = document.getElementById('listener-count');
-const currentTrack = document.getElementById('current-track');
+const trackInfo = document.getElementById('track-info');
 const audioPlayer = document.querySelector('audio');
 
-// Bookmark functionality
-function bookmarkPage() {
-    if (window.sidebar && window.sidebar.addPanel) { // Firefox
-        window.sidebar.addPanel(document.title, window.location.href, '');
-    } else if (window.external && ('AddFavorite' in window.external)) { // IE
-        window.external.AddFavorite(window.location.href, document.title);
-    } else { // Chrome, Safari, etc.
-        alert('Press ' + (navigator.userAgent.toLowerCase().indexOf('mac') != -1 ? 'Cmd' : 'Ctrl') + '+D to bookmark this page.');
-    }
-}
-
-// Enhanced share functionality
-function sharePage() {
-    if (navigator.share) {
-        navigator.share({
-            title: '8-Bit Waves FM',
-            text: 'Check out this awesome chiptune radio station!',
-            url: window.location.href
-        })
-        .then(() => {
-            gtag('event', 'share', {
-                'event_category': 'Engagement',
-                'event_label': 'Share Station'
-            });
-        })
-        .catch(console.error);
-    } else {
-        // Fallback
-        const dummy = document.createElement('input');
-        document.body.appendChild(dummy);
-        dummy.value = window.location.href;
-        dummy.select();
-        document.execCommand('copy');
-        document.body.removeChild(dummy);
-        alert('URL copied to clipboard!');
-        gtag('event', 'copy_url', {
-            'event_category': 'Engagement',
-            'event_label': 'Copy Station URL'
-        });
-    }
-}
-
-// Playlist configuration
+// Single playlist with all songs
 const playlist = [
     {
-        title: "8-Bit Waves FM Theme",
-        artist: "8-Bit Waves FM",
-        file: "music/theme.mp3"
+        title: "Sweet Child O' Mine",
+        artist: "Guns N' Roses",
+        file: "music/Guns_n_Roses_-_Sweet_Child_O_Mine.mp3"
     },
-    // Add more songs here
+    {
+        title: "Hotel California",
+        artist: "The Eagles",
+        file: "music/The_Eagles_-_Hotel_California.mp3"
+    },
+    {
+        title: "Sweet Home Alabama",
+        artist: "Lynyrd Skynyrd",
+        file: "music/Lynyrd_Skynyrd_-_Sweet_Home_Alabama.mp3"
+    },
+    {
+        title: "Paradise City",
+        artist: "Guns N' Roses",
+        file: "music/Guns_n_Roses_-_Paradise_City.mp3"
+    },
+    {
+        title: "Free Bird",
+        artist: "Lynyrd Skynyrd",
+        file: "music/Lynyrd_Skynyrd_-_Free_Bird.mp3"
+    },
+    {
+        title: "Everlong",
+        artist: "Foo Fighters",
+        file: "music/Foo_Fighters_-_Everlong.mp3"
+    },
+    {
+        title: "Black Hole Sun",
+        artist: "Soundgarden",
+        file: "music/Soundgarden_-_Black_Hole_Sun.mp3"
+    },
+    {
+        title: "Tonight Tonight",
+        artist: "Smashing Pumpkins",
+        file: "music/Smashing_Pumpkins_-_Tonight_Tonight.mp3"
+    },
+    {
+        title: "1979",
+        artist: "Smashing Pumpkins",
+        file: "music/Smashing_Pumpkins_-_1979.mp3"
+    },
+    {
+        title: "Learn to Fly",
+        artist: "Foo Fighters",
+        file: "music/Foo_Fighters_-_Learn_to_Fly.mp3"
+    },
+    {
+        title: "Thriller",
+        artist: "Michael Jackson",
+        file: "music/Michael_Jackson_-_Thriller.mp3"
+    },
+    {
+        title: "Beat It",
+        artist: "Michael Jackson",
+        file: "music/Michael_Jackson_-_Beat_It.mp3"
+    },
+    {
+        title: "Material Girl",
+        artist: "Madonna",
+        file: "music/Madonna_-_Material_Girl.mp3"
+    },
+    {
+        title: "Holiday",
+        artist: "Madonna",
+        file: "music/Madonna_-_Holiday.mp3"
+    },
+    {
+        title: "Don't Stop Believin'",
+        artist: "Journey",
+        file: "music/Journey_-_Don't_Stop_Believin.mp3"
+    }
 ];
 
 let currentTrackIndex = 0;
+let isShuffleEnabled = true; // Enable shuffle by default
 
 // Initialize audio player with first track
 audioPlayer.src = playlist[0].file;
@@ -74,9 +100,43 @@ function updateTrackInfo() {
     `;
 }
 
+// Shuffle array function
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
+// Toggle shuffle
+function toggleShuffle() {
+    isShuffleEnabled = !isShuffleEnabled;
+    const shuffleBtn = document.getElementById('shuffle-btn');
+    shuffleBtn.classList.toggle('active');
+    
+    if (isShuffleEnabled) {
+        // Shuffle the playlist
+        shuffleArray([...playlist]);
+        currentTrackIndex = 0;
+        audioPlayer.src = playlist[0].file;
+        audioPlayer.play();
+        updateTrackInfo();
+    }
+    
+    gtag('event', 'shuffle_toggle', {
+        'event_category': 'Playback',
+        'event_label': isShuffleEnabled ? 'Shuffle On' : 'Shuffle Off'
+    });
+}
+
 // Play next track
 function playNextTrack() {
-    currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+    if (isShuffleEnabled) {
+        currentTrackIndex = Math.floor(Math.random() * playlist.length);
+    } else {
+        currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+    }
     audioPlayer.src = playlist[currentTrackIndex].file;
     audioPlayer.play();
     updateTrackInfo();
@@ -106,24 +166,14 @@ audioPlayer.addEventListener('ended', playNextTrack);
 
 // Initialize
 function init() {
-    setupAudioStream();
+    console.log('Player initialized with random playlist');
+    // Enable shuffle by default
+    const shuffleBtn = document.getElementById('shuffle-btn');
+    shuffleBtn.classList.add('active');
 }
 
 // Start when DOM is loaded
 document.addEventListener('DOMContentLoaded', init);
-
-// Digital Clock
-function updateClock() {
-    const now = new Date();
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0');
-    document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
-}
-
-// Update clock every second
-setInterval(updateClock, 1000);
-updateClock(); // Initial update 
 
 // Color controls
 const primaryColorInput = document.getElementById('primaryColor');
@@ -153,23 +203,23 @@ const volumeBtn = document.getElementById('volumeBtn');
 const volumeSlider = document.getElementById('volumeSlider');
 
 // Play/Pause functionality
-playPauseBtn.addEventListener('click', () => {
+function playPause() {
     if (audioPlayer.paused) {
         audioPlayer.play();
-        playPauseBtn.querySelector('i').className = 'fas fa-pause';
+        document.getElementById('play-pause-btn').querySelector('i').className = 'fas fa-pause';
         gtag('event', 'play_radio', {
             'event_category': 'Engagement',
             'event_label': 'Radio Play'
         });
     } else {
         audioPlayer.pause();
-        playPauseBtn.querySelector('i').className = 'fas fa-play';
+        document.getElementById('play-pause-btn').querySelector('i').className = 'fas fa-play';
         gtag('event', 'pause_radio', {
             'event_category': 'Engagement',
             'event_label': 'Radio Pause'
         });
     }
-});
+}
 
 // Volume controls
 let previousVolume = 1;

@@ -48,39 +48,56 @@
     </header>
     <main>
         <div class="player-container">
-            <div class="retro-border">
-                <div class="equalizer">
-                    <div class="eq-bar"></div>
-                    <div class="eq-bar"></div>
-                    <div class="eq-bar"></div>
-                    <div class="eq-bar"></div>
-                    <div class="eq-bar"></div>
-                    <div class="eq-bar"></div>
-                    <div class="eq-bar"></div>
-                    <div class="eq-bar"></div>
-                    <div class="eq-bar"></div>
-                    <div class="eq-bar"></div>
-                </div>
-                <audio id="audioPlayer">
-                    <source src="https://uk17freenew.listen2myradio.com/live.mp3?typeportmount=s1_28059_stream_159897494" type="audio/mpeg">
-                    Your browser does not support the audio element.
-                </audio>
-                <div class="status">
-                    <div class="listeners">Listeners: <span id="listener-count">~</span></div>
-                    <div class="now-playing">Now Playing: <span id="current-track">Live Stream</span><span class="blink">_</span></div>
+            <div class="player-header">
+                <div class="station-info">
+                    <h1>8-BIT WAVES FM</h1>
                 </div>
             </div>
-            <div class="player-controls">
-                <button id="playPauseBtn" class="control-btn">
-                    <i class="fas fa-play"></i>
-                </button>
-                <button id="volumeBtn" class="control-btn">
-                    <i class="fas fa-volume-up"></i>
-                </button>
-                <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="1">
-                <button onclick="sharePage()" class="control-btn">
-                    <i class="fas fa-share-alt"></i>
-                </button>
+            <div class="player-content">
+                <div class="track-info" id="track-info">
+                    <div class="track-title">Loading...</div>
+                    <div class="track-artist">Please wait...</div>
+                    <div class="playlist-name"></div>
+                </div>
+                <div class="retro-border">
+                    <div class="equalizer">
+                        <div class="eq-bar"></div>
+                        <div class="eq-bar"></div>
+                        <div class="eq-bar"></div>
+                        <div class="eq-bar"></div>
+                        <div class="eq-bar"></div>
+                        <div class="eq-bar"></div>
+                        <div class="eq-bar"></div>
+                        <div class="eq-bar"></div>
+                        <div class="eq-bar"></div>
+                        <div class="eq-bar"></div>
+                    </div>
+                    <audio id="audioPlayer">
+                        <source src="https://uk17freenew.listen2myradio.com/live.mp3?typeportmount=s1_28059_stream_159897494" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+                <div class="player-controls">
+                    <button id="prev-btn" class="control-btn" onclick="playPreviousTrack()">
+                        <i class="fas fa-backward"></i>
+                    </button>
+                    <button id="play-pause-btn" class="control-btn" onclick="playPause()">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button id="next-btn" class="control-btn" onclick="playNextTrack()">
+                        <i class="fas fa-forward"></i>
+                    </button>
+                    <button id="shuffle-btn" class="control-btn" onclick="toggleShuffle()" title="Toggle Shuffle">
+                        <i class="fas fa-random"></i>
+                    </button>
+                    <button id="volumeBtn" class="control-btn">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                    <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="1">
+                    <button onclick="sharePage()" class="control-btn">
+                        <i class="fas fa-share-alt"></i>
+                    </button>
+                </div>
             </div>
         </div>
 
