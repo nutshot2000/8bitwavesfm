@@ -525,15 +525,6 @@ function updateTrackInfo() {
     `;
 }
 
-// Shuffle array function
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-}
-
 // Toggle shuffle
 function toggleShuffle() {
     isShuffleEnabled = !isShuffleEnabled;
@@ -541,10 +532,10 @@ function toggleShuffle() {
     shuffleBtn.classList.toggle('active');
     
     if (isShuffleEnabled) {
-        // Shuffle the playlist
-        shuffleArray([...playlist]);
+        // Create a proper copy of the playlist and shuffle it
+        playlist.sort(() => Math.random() - 0.5);
         currentTrackIndex = 0;
-        audioPlayer.src = playlist[0].file;
+        audioPlayer.src = playlist[currentTrackIndex].file;
         audioPlayer.play();
         updateTrackInfo();
     }
@@ -558,7 +549,12 @@ function toggleShuffle() {
 // Play next track
 function playNextTrack() {
     if (isShuffleEnabled) {
-        currentTrackIndex = Math.floor(Math.random() * playlist.length);
+        // Get a random index that's different from the current one
+        let newIndex;
+        do {
+            newIndex = Math.floor(Math.random() * playlist.length);
+        } while (newIndex === currentTrackIndex && playlist.length > 1);
+        currentTrackIndex = newIndex;
     } else {
         currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
     }
@@ -590,10 +586,12 @@ function init() {
     const shuffleBtn = document.getElementById('shuffle-btn');
     shuffleBtn.classList.add('active');
     
-    // Start playing
+    // Start playing with shuffled playlist
     if (isShuffleEnabled) {
-        shuffleArray(playlist);
+        playlist.sort(() => Math.random() - 0.5);
+        currentTrackIndex = 0;
     }
+    audioPlayer.src = playlist[currentTrackIndex].file;
     audioPlayer.play().catch(error => {
         console.log('Playback failed, waiting for user interaction:', error);
     });
