@@ -1,0 +1,21 @@
+DNS Records for 8bitwaves.org:
+
+Type    Host    Value               TTL
+A       @       185.199.108.153     30 min
+A       @       185.199.109.153     30 min
+A       @       185.199.110.153     30 min
+A       @       185.199.111.153     30 min
+CNAME   www     nutshot2000.github.io    30 min
+
+Steps:
+1. Log into Namecheap
+2. Go to "Domain List"
+3. Click "Manage" next to 8bitwaves.org
+4. Click "Advanced DNS"
+5. Remove any existing records (the parking page and URL redirect)
+6. Add each A record above using "Add New Record"
+7. Add the CNAME record for "www"
+8. Set all TTL values to 30 min
+9. Save changes
+
+Note: It may take up to 30 minutes for DNS changes to propagate 
